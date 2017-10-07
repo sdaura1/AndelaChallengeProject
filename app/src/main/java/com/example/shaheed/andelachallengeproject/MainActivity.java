@@ -17,9 +17,13 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    CardView myCard;
     private String TAG = MainActivity.class.getSimpleName();
     public ResponseModel[] report;
+    TextView cardTitle;
+    String etheurString;// = String.valueOf(etheur);
+    String ethusdString;// = String.valueOf(ethusd);
+    String btceurString;// = String.valueOf(btceur);
+    String btcusdString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         new async_method().execute();
+
     }
 
 
@@ -60,24 +65,29 @@ public class MainActivity extends AppCompatActivity {
                     //JSONArray jsonArray = object.getJSONArray("items");
                     JSONObject jsonObject = new JSONObject(jsonResponse);
 
-                    report = new ResponseModel[jsonObject.length()];
-
                     for (int i = 0; i < jsonObject.length(); i++) {
-                        JSONObject jobject = jsonObject.getJSONObject("BTC");
-                        JSONObject jobject2 = jsonObject.getJSONObject("ETH");
+                        JSONObject btcobject = jsonObject.getJSONObject("BTC");
+                        JSONObject ethobject = jsonObject.getJSONObject("ETH");
 
                         //assigning value to variables in responseModel class
                         ResponseModel btcreport = new ResponseModel();
-                        btcreport.setEUR((float) jobject.getDouble("EUR"));
-                        btcreport.setUSD((float) jobject.getDouble("USD"));
+                        btcreport.setEUR((float) btcobject.getDouble("EUR"));
+                        btcreport.setUSD((float) btcobject.getDouble("USD"));
 
                         ResponseModel ethreport = new ResponseModel();
-                        ethreport.setEUR((float) jobject2.getDouble("EUR"));
-                        ethreport.setUSD((float) jobject2.getDouble("USD"));
+                        ethreport.setEUR((float) ethobject.getDouble("EUR"));
+                        ethreport.setUSD((float) ethobject.getDouble("USD"));
 
-                        //adding each info from login and avatar_url to the devs array
-                        report[i] = btcreport;
-                        report[i] = ethreport;
+                        float btceur = (float) btcobject.getDouble("EUR");
+                        float btcusd = (float) btcobject.getDouble("USD");
+
+                        float etheur = (float) ethobject.getDouble("EUR");
+                        float ethusd = (float) ethobject.getDouble("USD");
+
+                        etheurString = String.valueOf(etheur);
+                        ethusdString = String.valueOf(ethusd);
+                        btceurString = String.valueOf(btceur);
+                        btcusdString = String.valueOf(btcusd);
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -102,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+            cardTitle = (TextView) findViewById(R.id.cardTitle);
+            cardTitle.setText(etheurString + " " + ethusdString + " " + btceurString + " " + btcusdString);
 
         }
     }
