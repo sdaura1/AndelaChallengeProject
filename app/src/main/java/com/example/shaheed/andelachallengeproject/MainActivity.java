@@ -18,11 +18,10 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
-    public ResponseModel[] report;
     TextView cardTitle;
-    String etheurString;// = String.valueOf(etheur);
-    String ethusdString;// = String.valueOf(ethusd);
-    String btceurString;// = String.valueOf(btceur);
+    String etheurString;
+    String ethusdString;
+    String btceurString;
     String btcusdString;
 
     @Override
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     class async_method extends AsyncTask<Void, Void, String> {
 
         String jsonResponse;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -52,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
             HTTPHandler httpHandler = new HTTPHandler();
 
-            jsonResponse = null;
             // Making a request to url and getting response
+            jsonResponse = null;
             String url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD,EUR";
             jsonResponse = httpHandler.makeServiceCall(url);
 
@@ -78,16 +76,10 @@ public class MainActivity extends AppCompatActivity {
                         ethreport.setEUR((float) ethobject.getDouble("EUR"));
                         ethreport.setUSD((float) ethobject.getDouble("USD"));
 
-                        float btceur = (float) btcobject.getDouble("EUR");
-                        float btcusd = (float) btcobject.getDouble("USD");
-
-                        float etheur = (float) ethobject.getDouble("EUR");
-                        float ethusd = (float) ethobject.getDouble("USD");
-
-                        etheurString = String.valueOf(etheur);
-                        ethusdString = String.valueOf(ethusd);
-                        btceurString = String.valueOf(btceur);
-                        btcusdString = String.valueOf(btcusd);
+                        etheurString = String.valueOf(ethreport.getEUR());
+                        ethusdString = String.valueOf(ethreport.getUSD());
+                        btceurString = String.valueOf(btcreport.getEUR());
+                        btcusdString = String.valueOf(btcreport.getUSD());
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -114,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
             cardTitle = (TextView) findViewById(R.id.cardTitle);
             cardTitle.setText(etheurString + " " + ethusdString + " " + btceurString + " " + btcusdString);
-
+            cardTitle.setTextSize(25);
         }
     }
 
